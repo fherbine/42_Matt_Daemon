@@ -1,8 +1,8 @@
 NAME = Matt_daemon
-INCLUDES =
+INCLUDES = ./includes
 SRC_PATH = ./src
 OBJ_PATH = $(SRC_PATH)/debug
-SRC_NAMES =
+SRC_NAMES = AReporter.abstract.cpp main.cpp Tintin_reporter.class.cpp
 OBJ_NAMES = $(SRC_NAMES:.cpp=.o)
 SRCS = $(addprefix $(SRC_PATH)/,$(SRC_NAMES))
 OBJS = $(addprefix $(OBJ_PATH)/,$(OBJ_NAMES))
