@@ -1,0 +1,9 @@
+# Binary
+Matt_daemon
+
+# Object files
+*.o
+
+# cache
+.*.sw*
+.vscode
