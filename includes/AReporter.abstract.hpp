@@ -36,6 +36,7 @@ public:
 
     virtual void debug(std::string const & message) const;
     virtual void info(std::string const & message) const;
+    virtual void log(std::string const & message) const;
     virtual void warning(std::string const & message) const;
     virtual void error(std::string const & message) const;
 

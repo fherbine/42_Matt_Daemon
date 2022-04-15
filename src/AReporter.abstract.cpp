@@ -79,12 +79,21 @@ void AReporter::debug(std::string const & message) const {
     
     this->_log(message, "DEBUG");
 }
+
 void AReporter::info(std::string const & message) const {
     if (this->getLogLevel() > REPORT_LEVEL_INF)
         return ;
     
     this->_log(message, "INFO");
 }
+
+void AReporter::log(std::string const & message) const {
+    if (this->getLogLevel() > REPORT_LEVEL_INF)
+        return ;
+    
+    this->_log(message, "LOG");
+}
+
 void AReporter::warning(std::string const & message) const {
     if (this->getLogLevel() > REPORT_LEVEL_WRN)
         return ;
