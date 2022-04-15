@@ -2,6 +2,7 @@
 # define LOCK_CLASS_HPP
 
 # include <string>
+# include <iostream>
 # include <fstream>
 # include <filesystem>
 
@@ -14,6 +15,8 @@ public:
     ~Lock(void);
 
     Lock & operator=(Lock const & rhs);
+
+    std::string const & getLockPath(void) const;
 
     void acquire(void);
     void release(void);
@@ -30,5 +33,7 @@ private:
 
     std::string const _lockPath;
 };
+
+std::ostream & operator<<(std::ostream & o, Lock const & i);
 
 #endif

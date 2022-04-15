@@ -19,6 +19,10 @@ Lock & Lock::operator=(Lock const & rhs) {
     return *(new Lock(rhs));
 }
 
+std::string const & Lock::getLockPath(void) const {
+    return this->_lockPath;
+}
+
 void Lock::acquire(void) {
     if (std::filesystem::exists(this->_lockPath))
         throw Lock::ResourceBusyError();
@@ -31,4 +35,9 @@ void Lock::acquire(void) {
 
 void Lock::release(void) {
     std::filesystem::remove(this->_lockPath);
+}
+
+std::ostream & operator<<(std::ostream & o, Lock const & i) {
+    o << "Lock instance with the fololowing lock file: " << i.getLockPath();
+    return o;
 }
