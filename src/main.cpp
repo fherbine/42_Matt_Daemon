@@ -1,6 +1,5 @@
 #include "../includes/Tintin_reporter.class.hpp"
-
-#include <fstream>
+#include "../includes/Lock.class.hpp"
 
 int main(void) {
     AReporter *logger = new Tintin_reporter("toto.txt");
@@ -12,6 +11,18 @@ int main(void) {
     std::cout << *logger << std::endl;
 
     delete logger;
+
+    Lock lock = Lock();
+    Lock lock2 = Lock();
+    lock.acquire();
+
+    try {
+        lock2.acquire();
+    } catch(Lock::ResourceBusyError & e) {
+        std::cerr << e.what() << std::endl;
+    }
+    
+    lock.release();
 
     return 0;
 }
