@@ -1,8 +1,9 @@
 #include "../includes/Tintin_reporter.class.hpp"
 #include "../includes/Lock.class.hpp"
+#include "../includes/Server.class.hpp"
 
 int main(void) {
-    AReporter *logger = new Tintin_reporter("toto.txt");
+    AReporter *logger = new Tintin_reporter();
     logger->info("started");
     logger->debug("A random debug message");
     logger->warning("Be careful !");
@@ -10,7 +11,6 @@ int main(void) {
     
     std::cout << *logger << std::endl;
 
-    delete logger;
 
     Lock lock = Lock();
     Lock lock2 = Lock();
@@ -21,8 +21,14 @@ int main(void) {
     } catch(Lock::ResourceBusyError & e) {
         std::cerr << e.what() << std::endl;
     }
-    
+
     lock.release();
+
+    Server serv = Server(*logger);
+
+    serv.run();
+
+    delete logger;
 
     return 0;
 }
