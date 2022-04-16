@@ -3,6 +3,10 @@
 
 # include <algorithm>
 # include <string>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <unistd.h>
+
 
 
 namespace Utility {
@@ -33,6 +37,16 @@ namespace Utility {
             return s;
         }
     };
+
+    namespace OS {
+        pid_t start_daemon(void);
+
+        class OSError : std::exception {
+            virtual const char *what() const throw() {
+                return ("OS Error");
+            }
+        };
+    }
 
 };
 

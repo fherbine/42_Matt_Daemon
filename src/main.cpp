@@ -1,9 +1,11 @@
 #include "../includes/Tintin_reporter.class.hpp"
 #include "../includes/Lock.class.hpp"
 #include "../includes/Server.class.hpp"
+#include "../includes/utility.hpp"
 
 int main(void) {
-    AReporter *logger = new Tintin_reporter();
+    Utility::OS::start_daemon();
+    AReporter *logger = new Tintin_reporter("/tmp/log.txt");
     logger->info("started");
     logger->debug("A random debug message");
     logger->warning("Be careful !");
