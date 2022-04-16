@@ -4,33 +4,34 @@
 #include "../includes/utility.hpp"
 
 int main(void) {
-    Utility::OS::start_daemon();
-    AReporter *logger = new Tintin_reporter("/tmp/log.txt");
-    logger->info("started");
-    logger->debug("A random debug message");
-    logger->warning("Be careful !");
-    logger->error("This time there will be no excuses...");
-    
-    std::cout << *logger << std::endl;
+  if (!Utility::OS::amIRoot()) {
+    std::cerr << "Must be root !" << std::endl;
+    return -1;
+  }
 
+  AReporter *logger = new Tintin_reporter("/var/log/matt_daemon/matt_daemon.log");
 
-    Lock lock = Lock();
-    Lock lock2 = Lock();
-    lock.acquire();
+  logger->info("Started.");
 
-    try {
-        lock2.acquire();
-    } catch(Lock::ResourceBusyError & e) {
-        std::cerr << e.what() << std::endl;
-    }
+  Lock lock = Lock("/var/lock/matt_daemon.lock");
 
-    lock.release();
+  lock.acquire();
 
-    Server serv = Server(*logger);
+  logger->info("Creating server.");
+  Server server = Server(*logger);
+  logger->info("Server created.");
 
-    serv.run();
+  logger->info("Entering Daemon mode.");
+  Utility::OS::start_daemon();
+  logger->info("started PID:" + std::to_string(getpid()));
 
-    delete logger;
+  server.run();
 
-    return 0;
+  lock.release();
+
+  logger->info("Quitting.");
+
+  delete logger;
+
+  return 0;
 }

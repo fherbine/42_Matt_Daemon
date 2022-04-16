@@ -39,6 +39,10 @@ namespace Utility {
     };
 
     namespace OS {
+        inline bool amIRoot(void) {
+            return (getuid() == 0) ? true : false;
+        }
+        
         pid_t start_daemon(void);
 
         class OSError : std::exception {
