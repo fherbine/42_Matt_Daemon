@@ -1,6 +1,17 @@
 #include "../includes/Matt_daemon.hpp"
 
 extern Tintin_reporter g_logger;
+extern Lock g_lock;
+
+void signal_handler([[ maybe_unused ]]int _) {
+  g_logger.info("Signal handler.");
+  g_logger.info("Quitting.");
+
+  if (g_lock.isLocked())
+    g_lock.release();
+
+  exit(EXIT_SUCCESS);
+}
 
 int main(void) {
   if (!Utility::OS::amIRoot()) {
@@ -11,27 +22,27 @@ int main(void) {
   g_logger.info("Started.");
 
   for (int sgnum = 1; sgnum < NSIG; sgnum++)
-    signal(sgnum, []([[ maybe_unused ]]int _){
-      g_logger.info("Signal handler.");
-    });
+    signal(sgnum, &signal_handler);
+  
+  try {
+    g_lock.acquire();
 
-  Lock lock = Lock("/var/lock/matt_daemon.lock");
+    g_logger.info("Creating server.");
+    Server server = Server(g_logger);
+    g_logger.info("Server created.");
 
-  lock.acquire();
+    g_logger.info("Entering Daemon mode.");
+    Utility::OS::start_daemon();
+    g_logger.info("started PID:" + std::to_string(getpid()));
 
-  g_logger.info("Creating server.");
-  Server server = Server(g_logger);
-  g_logger.info("Server created.");
+    server.run();
 
-  g_logger.info("Entering Daemon mode.");
-  Utility::OS::start_daemon();
-  g_logger.info("started PID:" + std::to_string(getpid()));
+    g_lock.release();
 
-  server.run();
-
-  lock.release();
-
-  g_logger.info("Quitting.");
+    g_logger.info("Quitting.");
+  } catch (std:: exception & e) {
+    g_logger.error(e.what());
+  }
 
   return 0;
 }

@@ -2,7 +2,7 @@
 
 Lock::Lock(void) : Lock("/tmp/lock.lock") {}
 
-Lock::Lock(std::string lockPath) : _lockPath(lockPath) {}
+Lock::Lock(std::string lockPath) : _lockPath(lockPath), _locked(false) {}
 
 Lock::Lock(Lock const & src) {
     *this = src;
@@ -23,6 +23,10 @@ std::string const & Lock::getLockPath(void) const {
     return this->_lockPath;
 }
 
+bool Lock::isLocked(void) const {
+    return this->_locked;
+}
+
 void Lock::acquire(void) {
     if (std::filesystem::exists(this->_lockPath))
         throw Lock::ResourceBusyError();
@@ -31,10 +35,12 @@ void Lock::acquire(void) {
 
     ofs.open(this->_lockPath);
     ofs.close();
+    _locked = true;
 }
 
 void Lock::release(void) {
     std::filesystem::remove(this->_lockPath);
+    _locked = false;
 }
 
 std::ostream & operator<<(std::ostream & o, Lock const & i) {

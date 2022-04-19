@@ -17,6 +17,7 @@ public:
     Lock & operator=(Lock const & rhs);
 
     std::string const & getLockPath(void) const;
+    bool isLocked(void) const;
 
     void acquire(void);
     void release(void);
@@ -32,6 +33,7 @@ public:
 private:
 
     std::string const _lockPath;
+    bool _locked;
 };
 
 std::ostream & operator<<(std::ostream & o, Lock const & i);
