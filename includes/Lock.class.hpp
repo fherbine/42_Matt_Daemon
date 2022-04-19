@@ -5,6 +5,12 @@
 # include <iostream>
 # include <fstream>
 # include <filesystem>
+# include <sys/file.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+
+# include "./utility.hpp"
 
 class Lock {
 public:
@@ -34,6 +40,7 @@ private:
 
     std::string const _lockPath;
     bool _locked;
+    int _fd;
 };
 
 std::ostream & operator<<(std::ostream & o, Lock const & i);

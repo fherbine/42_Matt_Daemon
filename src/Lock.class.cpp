@@ -28,18 +28,31 @@ bool Lock::isLocked(void) const {
 }
 
 void Lock::acquire(void) {
-    if (std::filesystem::exists(this->_lockPath))
-        throw Lock::ResourceBusyError();
+    if ((this->_fd = open(this->getLockPath().c_str(), 0666)) == -1)
+        throw Utility::OS::OSError();
+    
 
-    std::ofstream ofs;
-
-    ofs.open(this->_lockPath);
-    ofs.close();
+    if (flock(this->_fd, LOCK_EX | LOCK_NB) == -1) {
+        switch (errno)
+        {
+        case EWOULDBLOCK:
+            throw Lock::ResourceBusyError();
+            break;
+        
+        default:
+            throw Utility::OS::OSError();
+            break;
+        }
+    }
+    
     _locked = true;
 }
 
 void Lock::release(void) {
-    std::filesystem::remove(this->_lockPath);
+    if (flock(this->_fd, LOCK_UN) == -1)
+        throw Utility::OS::OSError();
+
+    close(this->_fd);
     _locked = false;
 }
 
