@@ -18,7 +18,7 @@ AReporter::AReporter(std::ostream & outputStream, log_level_t logLevel) : _logLe
 
 AReporter::AReporter(std::string logfile, log_level_t logLevel) : _logLevel(logLevel) {
     std::ofstream *ofs = new std::ofstream();
-    ofs->open(logfile);
+    ofs->open(logfile, std::ios_base::app);
 
     this->setOutputStream(ofs);
     return ;

@@ -19,13 +19,13 @@ int main(void) {
     return -1;
   }
 
-  g_logger.info("Started.");
-
   for (int sgnum = 1; sgnum < NSIG; sgnum++)
     signal(sgnum, &signal_handler);
   
   try {
     g_lock.acquire();
+    
+    g_logger.info("Started.");
 
     g_logger.info("Creating server.");
     Server server = Server(g_logger);
