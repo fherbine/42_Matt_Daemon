@@ -40,7 +40,10 @@ int main(void) {
     g_lock.release();
 
     g_logger.info("Quitting.");
-  } catch (std:: exception & e) {
+  } catch (Lock::ResourceBusyError & e) {
+    g_logger.error(e.what());
+    std::cerr << e.what() << std::endl;
+  } catch (std::exception & e) {
     g_logger.error(e.what());
   }
 

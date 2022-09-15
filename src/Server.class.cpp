@@ -44,6 +44,8 @@ void Server::run(void) {
     std::string sbuffer;
 	fd_set readfds;
 
+    buffer[0] = 0;
+
     int sd, max_sd, activity, new_socket, nbytes;
 
     for (uint8_t i = 0; i < SERVER_MAX_CLIENT; i++)
@@ -155,8 +157,13 @@ void Server::run(void) {
 
                     if (Utility::String::to_lower(sbuffer) == "quit")
                         break ;
+                    
+                    if (sbuffer.empty())
+                        continue ;
 
                     this->_logger.log("User input: " + sbuffer);
+                    sbuffer = "";
+                    buffer[0] = 0;
                 }
 			}
 		}

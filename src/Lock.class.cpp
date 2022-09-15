@@ -28,7 +28,7 @@ bool Lock::isLocked(void) const {
 }
 
 void Lock::acquire(void) {
-    if ((this->_fd = open(this->getLockPath().c_str(), 0666)) == -1)
+    if ((this->_fd = open(this->getLockPath().c_str(), O_CREAT, 0666)) == -1)
         throw Utility::OS::OSError();
     
 
@@ -54,6 +54,7 @@ void Lock::release(void) {
 
     close(this->_fd);
     _locked = false;
+    std::filesystem::remove(this->getLockPath());
 }
 
 std::ostream & operator<<(std::ostream & o, Lock const & i) {
