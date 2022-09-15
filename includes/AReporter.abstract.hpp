@@ -8,8 +8,12 @@
 
 # include <cstdint>
 # include <iostream>
+# include <filesystem>
 # include <fstream>
 # include <string>
+
+# include "./utility.hpp"
+
 
 typedef uint8_t log_level_t;
 

@@ -30,3 +30,11 @@ pid_t Utility::OS::start_daemon(void) {
 
     return process_id;
 }
+
+void Utility::OS::Path::create_folder_tree(std::filesystem::path path) {
+    if (std::filesystem::exists(path))
+        return ;
+
+    create_folder_tree(path.parent_path());
+    std::filesystem::create_directory(path);
+}

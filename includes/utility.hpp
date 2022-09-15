@@ -2,6 +2,7 @@
 # define UTILITY_HPP
 
 # include <algorithm>
+# include <filesystem>
 # include <string>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -44,6 +45,10 @@ namespace Utility {
         }
         
         pid_t start_daemon(void);
+
+        namespace Path {
+            void create_folder_tree(std::filesystem::path path);
+        }
 
         class OSError : std::exception {
             virtual const char *what() const throw() {
