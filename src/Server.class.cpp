@@ -131,9 +131,16 @@ void Server::run(void) {
 				//if position is empty
 				if( client_sockets[i] == 0 ) {
 					client_sockets[i] = new_socket;
-					break;
-				}
+					goto accepted_connection;
+                }
 			}
+
+            // If no available socket close socket & display message
+            close(new_socket);
+            this->_logger.warning("Refused incomming connection as I'm already overbooked !");
+
+            accepted_connection:
+                continue;
 		}
 
         for (uint8_t i = 0; i < SERVER_MAX_CLIENT; i++)
