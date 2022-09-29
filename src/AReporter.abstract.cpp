@@ -18,6 +18,11 @@ AReporter::AReporter(std::ostream & outputStream, log_level_t logLevel) : _logLe
 
 AReporter::AReporter(std::string logfile, log_level_t logLevel) : _logLevel(logLevel) {
 
+    if (!Utility::OS::amIRoot()) {
+        std::cerr << "Must be root !" << std::endl;
+        exit(-1);
+    }
+
     if (!std::filesystem::exists(std::filesystem::path(logfile).parent_path()))
         Utility::OS::Path::create_folder_tree(std::filesystem::path(logfile).parent_path());
         
